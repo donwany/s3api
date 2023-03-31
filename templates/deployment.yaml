@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "s3api.fullname" . }}-gateway
+  labels:
+    app: s3-gateway
+  {{- include "s3api.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.gateway.replicas }}
+  selector:
+    matchLabels:
+      app: s3-gateway
+    {{- include "s3api.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: s3-gateway
+      {{- include "s3api.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - env:
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        envFrom:
+        - configMapRef:
+            name: {{ include "s3api.fullname" . }}-configmap
+        - secretRef:
+            name: {{ include "s3api.fullname" . }}-secret
+        image: {{ .Values.gateway.s3Gateway.image.repository }}:{{ .Values.gateway.s3Gateway.image.tag
+          | default .Chart.AppVersion }}
+        name: s3-gateway
+        ports:
+        - containerPort: 5002
+        resources: {{- toYaml .Values.gateway.s3Gateway.resources | nindent 10 }}

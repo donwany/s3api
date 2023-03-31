@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "s3api.fullname" . }}-gateway
+  labels:
+  {{- include "s3api.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.gateway.type }}
+  selector:
+    app: s3-gateway
+  {{- include "s3api.selectorLabels" . | nindent 4 }}
+  ports:
+	{{- .Values.gateway.ports | toYaml | nindent 2 -}}

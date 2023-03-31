@@ -1,0 +1,32 @@
+configmap:
+  accessTokenExpireMinutes: "60"
+  algorithm: HS256
+  awsAccountId: ""
+  bucketName: youtube-demo-bkt
+  queueName: election-message
+  region: us-east-1
+  userTable: Users
+gateway:
+  ports:
+  - port: 5002
+    protocol: TCP
+    targetPort: 5002
+  replicas: 1
+  s3Gateway:
+    image:
+      repository: worldbosskafka/s3-api # change here
+      tag: v1.0.0
+    resources:
+      limits:
+        cpu: "1"
+        memory: 1Gi
+      requests:
+        cpu: 500m
+        memory: 512Mi
+  type: ClusterIP
+kubernetesClusterDomain: cluster.local
+# change here
+secret:
+  awsAccessKeyId: ""
+  awsSecretAccessKey: ""
+  secretKey: ""

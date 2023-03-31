@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "s3api.fullname" . }}-configmap
+  labels:
+  {{- include "s3api.labels" . | nindent 4 }}
+data:
+  ACCESS_TOKEN_EXPIRE_MINUTES: {{ .Values.configmap.accessTokenExpireMinutes | quote
+    }}
+  ALGORITHM: {{ .Values.configmap.algorithm | quote }}
+  AWS_ACCOUNT_ID: {{ .Values.configmap.awsAccountId | quote }}
+  BUCKET_NAME: {{ .Values.configmap.bucketName | quote }}
+  QUEUE_NAME: {{ .Values.configmap.queueName | quote }}
+  REGION: {{ .Values.configmap.region | quote }}
+  USER_TABLE: {{ .Values.configmap.userTable | quote }}
